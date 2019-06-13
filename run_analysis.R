@@ -7,28 +7,28 @@ if (!file.exists('./UCIHARDataset.zip')){
 }
 
 ##Read and Convert Data##
-features <- read.csv('./UCI HAR Dataset/features.txt', header = FALSE, sep = ' ')
-features <- as.character(features[,2])
+sx_features <- read.csv('./UCI HAR Dataset/features.txt', header = FALSE, sep = ' ')
+sx_features <- as.character(sx_features[,2])
 
-data.train.x <- read.table('./UCI HAR Dataset/train/X_train.txt')
-data.train.activity <- read.csv('./UCI HAR Dataset/train/y_train.txt', header = FALSE, sep = ' ')
-data.train.subject <- read.csv('./UCI HAR Dataset/train/subject_train.txt',header = FALSE, sep = ' ')
+sx_data.train.x <- read.table('./UCI HAR Dataset/train/X_train.txt')
+sx_data.train.activity <- read.csv('./UCI HAR Dataset/train/y_train.txt', header = FALSE, sep = ' ')
+sx_data.train.subject <- read.csv('./UCI HAR Dataset/train/subject_train.txt',header = FALSE, sep = ' ')
 
-data.train <-  data.frame(data.train.subject, data.train.activity, data.train.x)
-names(data.train) <- c(c('subject', 'activity'), features)
+sx_data.train <-  data.frame(sx_data.train.subject, sx_data.train.activity, sx_data.train.x)
+names(sx_data.train) <- c(c('subject', 'activity'), sx_features)
 
-data.test.x <- read.table('./UCI HAR Dataset/test/X_test.txt')
-data.test.activity <- read.csv('./UCI HAR Dataset/test/y_test.txt', header = FALSE, sep = ' ')
-data.test.subject <- read.csv('./UCI HAR Dataset/test/subject_test.txt', header = FALSE, sep = ' ')
+sx_data.test.x <- read.table('./UCI HAR Dataset/test/X_test.txt')
+sx_data.test.activity <- read.csv('./UCI HAR Dataset/test/y_test.txt', header = FALSE, sep = ' ')
+sx_data.test.subject <- read.csv('./UCI HAR Dataset/test/subject_test.txt', header = FALSE, sep = ' ')
 
-data.test <-  data.frame(data.test.subject, data.test.activity, data.test.x)
-names(data.test) <- c(c('subject', 'activity'), features)
+sx_data.test <-  data.frame(sx_data.test.subject, sx_data.test.activity, sx_data.test.x)
+names(sx_data.test) <- c(c('subject', 'activity'), sx_features)
 
 ##1. Merges the Training and Testing Sets into 1 data set called sx_data.all##
-sx_data.all <- rbind(sx_data.train, data.test)
+sx_data.all <- rbind(sx_data.train, sx_data.test)
 
 ##2. Extracts only the measurements on the mean and standard deviation for each measurement.##
-mean_std.select <- grep('mean|std', features)
+mean_std.select <- grep('mean|std', sx_features)
 sx_data.sub <- sx_data.all[,c(1,2,mean_std.select + 2)]
 
 ##3. Uses descriptive activity names to name the activities in the data set##
@@ -47,7 +47,7 @@ sx_name.new <- gsub("Mag", "Magnitude", sx_name.new)
 sx_name.new <- gsub("-mean-", "_Mean_", sx_name.new)
 sx_name.new <- gsub("-std-", "_StandardDeviation_", sx_name.new)
 sx_name.new <- gsub("-", "_", sx_name.new)
-sx_names(sx_data.sub) <- sx_name.new
+names(sx_data.sub) <- sx_name.new
 
 ##5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.##
 
